@@ -1,0 +1,19 @@
+# Node.js
+.npm*
+node_modules
+
+# Env variables
+*.env
+!example*.env
+
+# OS X
+.DS_Store
+
+# Editor files
+.vscode
+
+# idea
+.idea
+.editorconfig
+*.iml
+*.iws

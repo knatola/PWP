@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "target": "es6",
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "outDir": "dist",
+      "experimentalDecorators": true        /* Enables experimental support for ES7 decorators. */
+    },
+    "lib": ["es2019"]
+  }

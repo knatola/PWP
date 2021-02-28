@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  psql:
+    container_name: psql-coingecko
+    image: postgres:13.1-alpine
+    volumes:
+      - psql-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+volumes:
+  psql-data:
+    external: true
