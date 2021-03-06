@@ -59,6 +59,28 @@ export const createTransactionHandler = async (req: Request, res: Response): Pro
 	}
 };
 
+export const createTransactionUpdateHandler = async (req: Request, res: Response): Promise<void> => {
+	const portfolioId = req.params.portfolioId;
+	const transactionId = req.params.transactionId;
+	const body = req.body;
+
+	try {
+		const portfolio = await Portfolio.findOne({ where: { id: portfolioId }});
+		if (!portfolio) {
+			return badRequest(res, "No portfolio found: " + portfolioId);
+		}
+		const transaction = await PortfolioTransaction.update({ ...body }, { where: { id: transactionId }, returning: true });
+		if (!transaction) {
+			return badRequest(res, `No transaction found with id: ${transactionId}`);
+		}
+		await modifyHoldings(portfolio, transaction[1][0]);
+		return success(res, transaction[1][0].toJSON());
+	} catch (e) {
+		console.error("Error updating transction, cause:", e);
+		return serverError(res);
+	}
+};
+
 export const getTransactionsHandler = async (req: Request, res: Response): Promise<void> => {
 	const portfolioId = req.params.portfolioId;
 	try {

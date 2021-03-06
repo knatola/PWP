@@ -6,7 +6,7 @@ import config from "./config/app-config";
 import createSequelize from "./config/create-sequelize";
 import { body, validationResult } from "express-validator";
 import { categoriesHandler, currencyHandler, currencyHandlerAll, search } from "./api/currency-handler";
-import { createPortfolioHandler, createTransactionHandler, getPortfolioHoldings, getTransactionsHandler } from "./api/portfolio-handler";
+import { createPortfolioHandler, createTransactionHandler, createTransactionUpdateHandler, getPortfolioHoldings, getTransactionsHandler } from "./api/portfolio-handler";
 import { getCurrenciesByUpdatedAt, createCurrency, updateMarketData } from "./db/currency-persistance";
 
 (async () => {
@@ -42,16 +42,25 @@ function bindHandlers(app: any) {
 	app.get("/currency/:currencyId", currencyHandler);
 	app.get("/currency", currencyHandlerAll);
 	app.get("/categories", categoriesHandler);
-	app.post("/portfolios", 
+	app.post("/portfolios",
 		createPortfolioHandler);
 	app.post("/portfolios/:portfolioId/transactions",
 		body("amount").isFloat(),
 		body("type")
 			.notEmpty()
-			.custom((type) => type === "sell" || type ===" buy"),
+			.custom((type) => type === "sell" || type === " buy"),
 		body("price").isNumeric(),
 		body("currency").isString(),
 		createTransactionHandler);
+	app.put("/portfolios/:portfolioId/transactions/:transactionId",
+		body("amount").optional().isFloat(),
+		body("type")
+			.optional()
+			.notEmpty()
+			.custom((type) => type === "sell" || type === " buy"),
+		body("price").optional().isNumeric(),
+		body("currency").optional().isString(),
+		createTransactionUpdateHandler);
 	app.get("/portfolios/:portfolioId/transactions",
 		getTransactionsHandler);
 	app.get("/portfolios/:portfolioId/holdings",
